@@ -5,7 +5,8 @@ import pandas as pd
 #the database name is ORG
 
 #IMPORTANT: type your student password below
-connection = pymysql.connect(host='127.0.0.1', user='root', password='', database='org', port=3306)
+import mysql.connector
+connection = pymysql.connect(host='127.0.0.1', user='root', password='NO', database='org', port=3306)
 
 
 # IMPORTANT: the table name is CASE SENSITIVE
@@ -41,7 +42,10 @@ connection = pymysql.connect(host='127.0.0.1', user='root', password='', databas
 
 def question1():
 	# write your query below
-	query = ""
+	query = """
+	SELECT LAST_NAME 
+	FROM Worker;
+	""" 
 	df = pd.read_sql(query, connection)
 
 	return df
@@ -69,7 +73,11 @@ print(question1())
 
 def question2():
     # write your query below
-	query = ""
+	query = """
+	SELECT DISTINCT DEPARTMENT 
+	FROM Worker 
+	ORDER BY DEPARTMENT;
+	"""
 	df = pd.read_sql(query, connection)
 
 	return df
@@ -104,7 +112,11 @@ print(question2())
 
 def question3():
     # write your query below
-	query = ""
+	query = """
+	SELECT DISTINCT FIRST_NAME, SALARY 
+	FROM Worker 
+	ORDER BY FIRST_NAME, SALARY DESC;
+	"""
 	df = pd.read_sql(query, connection)
 
 	return df
@@ -132,7 +144,12 @@ print(question3())
 
 def question4():
     # write your query below
-	query = ""
+	query = """
+	SELECT DEPARTMENT,COUNT(WORKER_ID) AS WORKER_NUM 
+	FROM Worker 
+	GROUP BY DEPARTMENT 
+	ORDER BY WORKER_NUM;
+	"""
 	df = pd.read_sql(query, connection)
 
 	return df
@@ -168,7 +185,13 @@ print(question4())
 
 def question5():
     # write your query below
-	query = ""
+	query = """
+	SELECT T.WORKER_TITLE, W.FIRST_NAME, W.SALARY 
+	FROM Worker W 
+	INNER JOIN Title T 
+	ON W.WORKER_ID = T.WORKER_REF_ID 
+	ORDER BY W.SALARY DESC, W.FIRST_NAME ASC;
+	"""
 	df = pd.read_sql(query, connection)
 
 	return df
@@ -198,7 +221,19 @@ print(question5())
 
 def question6():
     # write your query below
-	query = ""
+	query = """
+	SELECT T.WORKER_TITLE, W.FIRST_NAME, W.SALARY 
+	FROM Worker W 
+	INNER JOIN Title T 
+	ON W.WORKER_ID = T.WORKER_REF_ID 
+	WHERE W.SALARY IN (
+		SELECT SALARY 
+		FROM Worker 
+		GROUP BY SALARY 
+		HAVING COUNT(*) >1
+		) 
+	ORDER BY W.SALARY DESC, W.FIRST_NAME ASC;
+	"""
 	df = pd.read_sql(query, connection)
 
 	return df
@@ -217,7 +252,12 @@ print(question6())
 
 def question7():
     # write your query below
-	query = ""
+	query = """
+	SELECT DEPARTMENT, COUNT(*) AS No_Of_Workers 
+	FROM Worker 
+	GROUP BY DEPARTMENT 
+	HAVING COUNT(*) = 4;
+	"""
 	df = pd.read_sql(query, connection)
 
 	return df
